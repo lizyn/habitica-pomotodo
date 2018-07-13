@@ -20,11 +20,12 @@ Scripts that help sync between habitodo and pomotodo (a pomodoro service)
 
 ## drawbacks
 
-1. can't score repeating tasks automatically due to pomotodo limitations[^1]
+1. can't score repeating tasks automatically due to pomotodo limitations <sup>[1](#fn1)</sup>
 2. requires a local file to store id data
 3. really, really slooooow
-4. limited functions, hard to use [^2]
+4. limited functions, hard to use <sup>[2](#fn1)</sup>
 5. ...
 
-[^1]: For the same (repeating) todo in pomotodo, its id returned through api varies each time when completed
-[^2]: Actually, I write this only for my self…
+<a name="fn1">1</a>: For the same (repeating) todo in pomotodo, its id returned through api varies each time when completed
+
+<a name="fn2">2</a>: Actually, I write this only for my self…
