@@ -14,6 +14,10 @@ Scripts that help sync between habitodo and pomotodo (a pomodoro service)
 - [x] repeating tasks
 - [x] filter tasks
 
+### dependencies
+
+- [dotenv (a python module)](https://github.com/theskumar/python-dotenv)
+
 ## drawbacks
 
 1. can't score repeating tasks automatically due to pomotodo limitations[^1]
