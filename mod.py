@@ -8,8 +8,7 @@ class Mod(object):
 
     def __init__(self):
 
-        from pathlib import Path
-        self.env_path = Path('.')
+        self.env_path = './'
         self.timeformat = "%Y-%m-%dT%H:%M:%SZ"
         self.timeformat_hab = "%Y-%m-%dT%H:%M:%S.%fZ"
         self.path = "./data/"

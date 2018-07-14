@@ -6,7 +6,7 @@ import requests
 class Pomotodo(Mod):
     def __init__(self):
         super(Pomotodo, self).__init__()
-        self.env_path = self.env_path / ".pt"
+        self.env_path = os.path.join('./', '.pt')
         self.load_env()
         self.token = os.getenv("POMOTODO_TOKEN")
         assert type(self.token) == str, "POMOTODO_TOKEN env not set!"

@@ -7,7 +7,7 @@ from datetime import datetime
 class Habitica(Mod):
     def __init__(self):
         super(Habitica, self).__init__()
-        self.env_path = self.env_path / ".hab"
+        self.env_path = os.path.join('./', '.hab')
         self.load_env()
         self.uuid = os.getenv("HABITICA_UUID")
         self.token = os.getenv("HABITICA_TOKEN")
