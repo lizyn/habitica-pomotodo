@@ -26,6 +26,11 @@ Scripts that help sync between habitodo and pomotodo (a pomodoro service)
 4. limited functions, hard to use <sup>[2](#fn1)</sup>
 5. ...
 
+## todos
+
+- [x] port to  Pythonista on iOS
+- [ ] use asyncio / aiohttp to accelerate syncing process
+
 <a name="fn1">1</a>: For the same (repeating) todo in pomotodo, its id returned through api varies each time when completed
 
 <a name="fn2">2</a>: Actually, I write this only for my self…
