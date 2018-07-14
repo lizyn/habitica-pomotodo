@@ -21,14 +21,14 @@ class Pomotodo(Mod):
         try:
             repeat_type = repeat_dict[frequency]
             repeat_tag = '#'+frequency+' '
-            remind_time = 0
+            remind_time = 2000
+            # I don't need this, but pomotodo requires it for repeated todos
         except:
             repeat_type = "none"
             repeat_tag = ''
             remind_time = None
 
         description = repeat_tag+description
-        # I don't need it, but pomotodo requires it for repeated todos
 
         response = requests.post("https://api.pomotodo.com/1/todos",
                                  headers={

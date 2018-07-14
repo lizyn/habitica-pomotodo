@@ -81,7 +81,14 @@ def habitica_to_pomotodo(hab, pt, start_hour=6, days=14,
                         habitodos.remove(habitodo)
                         break
 
-                todoid = habitodo["todoid"]
+                try:
+                    todoid = habitodo["todoid"]
+                # in case you change the HABITICA_LAST_LOOK_UP manually,
+                # and delete the database file at the same time, so that
+                # habitodo would be none, we should move to the next task
+                except:
+                    continue
+
                 subs = habitodo["subs"]
 
                 response = pt.edit_todo(todoid, task["text"])
@@ -90,7 +97,7 @@ def habitica_to_pomotodo(hab, pt, start_hour=6, days=14,
                 except KeyError:
                     print("task '%s" % task["text"],
                           "' not found in local file, ",
-                          "try to add/update it manually")
+                          "try to add / update it manually")
 
                 for item in checklist:
                     found = False
@@ -106,7 +113,7 @@ def habitica_to_pomotodo(hab, pt, start_hour=6, days=14,
                             except KeyError:
                                 print("checklist item '%s" % item["text"],
                                       "' not found in local file, ",
-                                      "try to add/update it manually")
+                                      "try to add / update it manually")
                             break
                     if found:
                         continue
@@ -186,14 +193,63 @@ def main():
     pt = Pomotodo()
     hab = Habitica()
 
-    action = sys.argv[1]
-    if action == "htp":
-        habitica_to_pomotodo(hab, pt)
-    elif action == "pth":
-        pomotodo_to_habitica(pt, hab)
+    if sys.platform != "ios":
+        action = sys.argv[1]
+        if action == "htp":
+            habitica_to_pomotodo(hab, pt)
+        elif action == "pth":
+            pomotodo_to_habitica(pt, hab)
+        else:
+            print("action '%s" % action, "' not supported")
+            exit()
     else:
-        print("action '%s" % action, "' not supported")
-        exit()
+        '''
+        A widget script that shows two buttons.
+        One for syncing Habitica tasks to Pomotodo,
+        the other for the reversed action.
+        '''
+        import appex
+        import ui
+
+        def htp_btn_pressed(sender):
+            sender.superview["status"].text = "Syncing…"
+            habitica_to_pomotodo(hab, pt)
+            sender.superview["status"].text = "Done"
+
+        def pth_btn_pressed(sender):
+            sender.superview["status"].text = "Syncing…"
+            pomotodo_to_habitica(pt, hab)
+            sender.superview["status"].text = "Done"
+
+        v = ui.View(frame=(0, 0, 320, 220))
+
+        label_status = ui.Label(frame=(200, 50, 100, 150),flex='h')
+        label_status.name = 'status'
+        label_status.font = ('Menlo', 12)
+
+        label_status.number_of_lines = 0
+        v.add_subview(label_status)
+        label_status.text = ""
+
+        htp_btn = ui.Button(frame=(10, 50, 150, 150),flex="hr")
+        htp_btn.title = "Habitica ->"
+        htp_btn.font = ('Menlo', 18)
+        htp_btn.border_color = "slategray"
+        htp_btn.border_width = 2
+        htp_btn.corner_radius = 6
+        htp_btn.action = htp_btn_pressed
+        v.add_subview(htp_btn)
+
+        pth_btn = ui.Button(frame=(160, 50, 150, 150),flex="hl")
+        pth_btn.title = "<- Pomotodo"
+        pth_btn.font = ('Menlo', 18)
+        pth_btn.border_color = "slategray"
+        pth_btn.border_width = 2
+        pth_btn.corner_radius = 6
+        pth_btn.action = pth_btn_pressed
+        v.add_subview(pth_btn)
+
+        appex.set_widget_view(v)
 
 if __name__ == '__main__':
     main()

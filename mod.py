@@ -23,7 +23,11 @@ class Mod(object):
         try:
             with open(self.path+name+".json", 'r') as f:
                 dict_Obj = f.read()
-            habitodos = json.loads(dict_Obj)
+            try:
+                habitodos = json.loads(dict_Obj)
+            except json.decoder.JSONDecodeError:
+                print("Failed to load habitodos, use an empty list instead.")
+                habitodos = []
         except FileNotFoundError:
             with open(self.path+name+".json", 'x') as f:
                 pass

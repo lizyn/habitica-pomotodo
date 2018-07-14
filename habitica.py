@@ -71,6 +71,8 @@ class Habitica(Mod):
         for todo in todos:
             try:
                 time_due_str = todo["date"]
+                if not time_due_str:
+                    continue
             except KeyError:
                 # that means it's an todo without due time,
                 # therefore no need to add to pomotodo
