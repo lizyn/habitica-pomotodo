@@ -13,7 +13,7 @@ Scripts that help sync between habitodo and pomotodo (a pomodoro service)
 - [x] score back in habitica
 - [x] repeating tasks
 - [x] filter tasks
-- [ ] a shabby gui for iOS app Pythonista
+- [x] a shabby gui for iOS app Pythonista
 
 ### dependencies
 
