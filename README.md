@@ -31,6 +31,7 @@ Scripts that help sync between habitodo and pomotodo (a pomodoro service)
 
 - [x] port to  Pythonista on iOS
 - [ ] use asyncio / aiohttp to accelerate syncing process
+- [ ] sync deletions from habitica to pomotodo
 - [ ] better UI for Pythonista
 
 <a name="fn1">1</a>: For the same (repeating) todo in pomotodo, its id returned through api varies each time when completed
