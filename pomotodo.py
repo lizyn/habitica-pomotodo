@@ -7,6 +7,7 @@ class Pomotodo(Mod):
     def __init__(self):
         super(Pomotodo, self).__init__()
         self.env_path = os.path.join('./', '.pt')
+        self.last_str = "POMOTODO_LAST_LOOK_UP"
         self.load_env()
         self.token = os.getenv("POMOTODO_TOKEN")
         assert type(self.token) == str, "POMOTODO_TOKEN env not set!"
@@ -103,12 +104,13 @@ class Pomotodo(Mod):
         completed = completed_after or completed
 
         if completed_after:
-            time_start_str = self.update_look_up_time(
-                "POMOTODO_LAST_LOOK_UP")[1]
+            time_start_str, time_now_str = self.update_look_up_time(
+                "POMOTODO_LAST_LOOK_UP")[1::2]
         else:
             from random import randint
             time_start_str = "1970-01-01T00:%s:%sZ" % (
                 randint(0, 59), randint(0, 59))
+            time_now_str = None
 
         params = {
             'limit': 100,
@@ -125,7 +127,7 @@ class Pomotodo(Mod):
                                 )
         response = response.json()
 
-        return time_start_str, response
+        return time_start_str, time_now_str, response
 
 
 def main():

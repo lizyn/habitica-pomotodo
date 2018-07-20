@@ -74,7 +74,6 @@ class Mod(object):
 
         time_now = datetime.utcnow()
         time_now_str = time_now.strftime(self.timeformat)
-        self.set_env(env, time_now_str)
 
         time_start_str = time_now_str
 
@@ -101,7 +100,7 @@ class Mod(object):
             time_str = re.match(pattern, file_todo).group(1)
             time_created = datetime.strptime(time_str, self.timeformat)
             if 7000 > (time_start - time_created).days > days_keep:
-                path_file_todo = os.path.join(path, file_todo)
+                path_file_todo = os.path.join(self.path, file_todo)
                 os.remove(path_file_todo)
                 print("Removed %s%s" % (self.path, file_todo))
 

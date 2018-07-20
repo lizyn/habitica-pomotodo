@@ -8,6 +8,7 @@ class Habitica(Mod):
     def __init__(self):
         super(Habitica, self).__init__()
         self.env_path = os.path.join('./', '.hab')
+        self.last_str = "HABITICA_LAST_LOOK_UP"
         self.load_env()
         self.uuid = os.getenv("HABITICA_UUID")
         self.token = os.getenv("HABITICA_TOKEN")
@@ -17,9 +18,10 @@ class Habitica(Mod):
         self.prefix = "habitica_tasks_"
 
     def get_tasks(self, time_start):
-        time_last_look_up = self.update_look_up_time(
-            "HABITICA_LAST_LOOK_UP")[0]
-        time_start_str = time_start.strftime("%Y-%m-%dT%H:%M:%SZ")
+        (time_last_look_up, time_last_look_up_str,
+            time_now, time_now_str) = self.update_look_up_time(
+                "HABITICA_LAST_LOOK_UP")
+
         response = requests.get("https://habitica.com/api/v3/tasks/user",
                                 params={
                                     # "type": "todos",
@@ -30,11 +32,11 @@ class Habitica(Mod):
                                     "x-api-user": self.uuid,
                                     "x-api-key": self.token
                                 })
-        # print(type(response.json()))
+
         assert response.status_code == 200, response.text
         response = response.json()
         assert response["success"]
-        return time_start_str, response, time_last_look_up
+        return time_last_look_up, time_now, time_now_str, response
 
     def score_task(self, _id):
         response = requests.post(

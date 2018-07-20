@@ -6,25 +6,22 @@ from datetime import datetime
 
 
 def habitica_to_pomotodo(hab, pt, start_hour=6, days=14,
-                         store=True, delete=True, keep=7):
-    time_start_str, response, time_last_look_up = hab.get_tasks(
+                         store=True, delete=True, keep=3):
+    time_last_look_up, time_now, time_now_str, response = hab.get_tasks(
         datetime.utcnow())
     assert response["success"], "Retriving data from habitica failed: " + \
         response["message"]
 
-    time_start = datetime.utcnow()
-    time_start_str = time_start.strftime(hab.timeformat)
-
     if delete:
-        hab.delete_old_files(time_start_str, keep)
+        hab.delete_old_files(time_now_str, keep)
     if store:
-        hab.store_json(time_start_str, response)
+        hab.store_json(time_now_str, response)
 
     tasks = (
         hab.filter_tasks(response, ("daily"),
                          ('frequency', "in ('daily', 'weekly')")
                          ) +
-        hab.filter_todos_due_in(response, time_start, days))
+        hab.filter_todos_due_in(response, time_now, days))
 
     habitodos = pt.load_habitodos()
 
@@ -99,7 +96,8 @@ def habitica_to_pomotodo(hab, pt, start_hour=6, days=14,
                           "' not found in local file, ",
                           "try to add / update it manually")
 
-                for item in checklist:
+                for item in (i for i in checklist if not(
+                             i["text"] == '' or i["text"].isspace())):
                     found = False
                     for sub in subs:
                         if item["id"] == sub["itemid"]:
@@ -123,24 +121,31 @@ def habitica_to_pomotodo(hab, pt, start_hour=6, days=14,
                         todoid, item["text"])
 
                     itemid = item["id"]
-                    subtodoid = subtodo_added["uuid"]
+                    try:
+                        subtodoid = subtodo_added["uuid"]
+                    except KeyError:
+                        print("failed to add subtodo '", item["text"],
+                              "', it's parent todo may be deleted")
                     habitodo_sub_new = {
                         "itemid": itemid, "subtodoid": subtodoid}
                     habitodo["subs"].append(habitodo_sub_new)
 
             habitodos.append(habitodo)
 
+    if time_now_str:
+        hab.set_env(hab.last_str, time_now_str)
     pt.dump_habitodos(habitodos)
 
 
 def pomotodo_to_habitica(pt, hab, start_hour=3,
-                         store=True, delete=True, keep=7):
-    time_start_str, c_todos = pt.get_todos(completed_after=True)
+                         store=True, delete=True, keep=3):
+    time_start_str, c_time_now_str, c_todos = pt.get_todos(
+        completed_after=True)
     assert 'errors' not in c_todos, c_todos['description']
     if store:
         pt.store_json(time_start_str, c_todos)
 
-    time_start_str, u_todos = pt.get_todos(completed=False)
+    time_start_str, u_time_now_str, u_todos = pt.get_todos(completed=False)
     assert 'errors' not in u_todos, u_todos['description']
     if store:
         pt.store_json(time_start_str, u_todos)
@@ -186,6 +191,8 @@ def pomotodo_to_habitica(pt, hab, start_hour=3,
                         if repeat_type == "none":
                             subs.remove(sub)
 
+    if c_time_now_str:
+        pt.set_env(pt.last_str, c_time_now_str)
     pt.dump_habitodos(habitodos)
 
 
