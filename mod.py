@@ -99,9 +99,9 @@ class Mod(object):
             pattern = r"%s(.*)\.json" % re.escape(self.prefix)
             time_str = re.match(pattern, file_todo).group(1)
             time_created = datetime.strptime(time_str, self.timeformat)
-            if 7000 > (time_start - time_created).days > days_keep:
-                path_file_todo = os.path.join(self.path, file_todo)
-                os.remove(path_file_todo)
+            if (time_start - time_created).days >= days_keep:
+                path_file_delete = os.path.join(self.path, file_todo)
+                os.remove(path_file_delete)
                 print("Removed %s%s" % (self.path, file_todo))
 
 

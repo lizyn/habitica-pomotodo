@@ -12,7 +12,7 @@ class Pomotodo(Mod):
         self.token = os.getenv("POMOTODO_TOKEN")
         assert type(self.token) == str, "POMOTODO_TOKEN env not set!"
 
-        self.prefix = "pomotodos_completed_"
+        self.prefix = "pomotodo_todos_"
 
     def add_todo(self, description, notice=None, frequency=None):
         repeat_dict = {

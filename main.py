@@ -139,16 +139,16 @@ def habitica_to_pomotodo(hab, pt, start_hour=6, days=14,
 
 def pomotodo_to_habitica(pt, hab, start_hour=3,
                          store=True, delete=True, keep=3):
+    time_start_str, u_time_now_str, u_todos = pt.get_todos(completed=False)
+    assert 'errors' not in u_todos, u_todos['description']
+    if store:
+        pt.store_json(time_start_str, u_todos)
+
     time_start_str, c_time_now_str, c_todos = pt.get_todos(
         completed_after=True)
     assert 'errors' not in c_todos, c_todos['description']
     if store:
         pt.store_json(time_start_str, c_todos)
-
-    time_start_str, u_time_now_str, u_todos = pt.get_todos(completed=False)
-    assert 'errors' not in u_todos, u_todos['description']
-    if store:
-        pt.store_json(time_start_str, u_todos)
 
     if delete:
         pt.delete_old_files(time_start_str, keep)
