@@ -62,7 +62,7 @@ class Habitica(Mod):
                 "x-api-user": self.uuid,
                 "x-api-key": self.token
             })
-        assert response.status_code == 200, response.text
+        # assert response.status_code == 200, response.text
         response = response.json()
 
         return response
